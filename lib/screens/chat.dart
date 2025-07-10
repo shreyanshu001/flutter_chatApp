@@ -3,6 +3,7 @@ import 'package:chat_app/widget/chat_messages.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:chat_app/screens/chatbot_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -30,15 +31,16 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
         title: const Text('chat_here'),
         actions: [
           IconButton(
             onPressed: () {
               FirebaseAuth.instance.signOut();
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.exit_to_app,
-              color: Theme.of(context).colorScheme.primary,
+              color: Colors.white54,
             ),
           ),
         ],
@@ -50,6 +52,17 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           NewMessages()
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ChatbotScreen(),
+            ),
+          );
+        },
       ),
     );
   }
