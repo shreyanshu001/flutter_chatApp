@@ -53,7 +53,11 @@ class _ChatScreenState extends State<ChatScreen> {
           NewMessages()
         ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
         child: const Icon(Icons.add),
         onPressed: () {
           Navigator.push(
