@@ -18,8 +18,44 @@ class ChatMessages extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(
-            child: Text('No Messages found'),
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.chat_bubble_outline,
+                  size: 80,
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'No messages yet',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                ),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: Text(
+                    'No one to chat? Try your personal chatbot!\nTap the robot icon above',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.6),
+                        ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Icon(
+                  Icons.arrow_upward,
+                  size: 32,
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+                ),
+              ],
+            ),
           );
         }
         if (snapshot.hasError) {
@@ -29,7 +65,7 @@ class ChatMessages extends StatelessWidget {
         }
         final loadedMessages = snapshot.data!.docs;
         return ListView.builder(
-          padding: const EdgeInsets.only(bottom: 40, left: 13, right: 13),
+          padding: const EdgeInsets.only(bottom: 40, left: 8, right: 8),
           reverse: true,
           itemBuilder: (context, index) {
             final chatMessage = loadedMessages[index].data();
@@ -41,16 +77,19 @@ class ChatMessages extends StatelessWidget {
                 nextChatMessage != null ? nextChatMessage['userId'] : null;
             final nextUserIsSame =
                 currentChatMessageUserID == nextChatMessageUserID;
+            final timestamp = (chatMessage['createdAt'] as Timestamp).toDate();
             if (nextUserIsSame) {
               return MessageBubble.next(
                   message: chatMessage['text'],
-                  isMe: authenticatedUser.uid == currentChatMessageUserID);
+                  isMe: authenticatedUser.uid == currentChatMessageUserID,
+                  timestamp: timestamp);
             } else {
               return MessageBubble.first(
                   userImage: chatMessage['userImage'],
                   username: chatMessage['username'],
                   message: chatMessage['text'],
-                  isMe: authenticatedUser.uid == currentChatMessageUserID);
+                  isMe: authenticatedUser.uid == currentChatMessageUserID,
+                  timestamp: timestamp);
             }
           },
           itemCount: loadedMessages.length,

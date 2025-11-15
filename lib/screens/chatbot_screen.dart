@@ -68,6 +68,10 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
         "model": 'llama3.2',
         "messages": apiMessages,
         "stream": false,
+        "options": {
+          "num_predict": 150,
+          "temperature": 0.7,
+        }
       };
       print(data);
 

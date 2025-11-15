@@ -37,7 +37,7 @@ class _NewMessageState extends State<NewMessages> {
       FirebaseFirestore.instance.collection('chat').add({
         'text': enteredMessage,
         'createdAt': Timestamp.now(),
-        'userID': user.uid,
+        'userId': user.uid,
         'username': userData.data()!['username'],
         'userImage': userData.data()!['image_url'],
       });
@@ -48,8 +48,16 @@ class _NewMessageState extends State<NewMessages> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 14, left: 15, right: 1),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        border: Border(
+          top: BorderSide(
+            color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+          ),
+        ),
+      ),
       child: Row(
         children: [
           Expanded(
@@ -57,14 +65,29 @@ class _NewMessageState extends State<NewMessages> {
               textCapitalization: TextCapitalization.sentences,
               autocorrect: true,
               enableSuggestions: true,
-              decoration: const InputDecoration(labelText: 'send a message...'),
+              decoration: InputDecoration(
+                hintText: 'Type a message...',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                fillColor: Theme.of(context).colorScheme.surfaceVariant,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
+              ),
               controller: messageController,
+              onSubmitted: (_) => _submitMessage(),
             ),
           ),
-          IconButton(
-            color: Theme.of(context).colorScheme.primary,
+          const SizedBox(width: 8),
+          FloatingActionButton(
             onPressed: _submitMessage,
-            icon: const Icon(Icons.send),
+            mini: true,
+            elevation: 0,
+            child: const Icon(Icons.send),
           ),
         ],
       ),

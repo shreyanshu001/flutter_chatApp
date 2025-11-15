@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/screens/chatbot_screen.dart';
+import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -31,42 +32,76 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: const Text('chat_here'),
+        title: const Text('FlutterChat'),
         actions: [
           IconButton(
             onPressed: () {
               FirebaseAuth.instance.signOut();
             },
-            icon: const Icon(
-              Icons.exit_to_app,
-              color: Colors.white54,
-            ),
+            icon: const Icon(Icons.logout),
+            tooltip: 'Sign Out',
           ),
         ],
       ),
-      body: const Column(
+      body: Stack(
         children: [
-          Expanded(
-            child: ChatMessages(),
+          const Column(
+            children: [
+              Expanded(
+                child: ChatMessages(),
+              ),
+              NewMessages()
+            ],
           ),
-          NewMessages()
-        ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: const Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const ChatbotScreen(),
+          Positioned(
+            top: 8,
+            right: 8,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ChatbotScreen(),
+                  ),
+                );
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.smart_toy,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      size: 22,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'AI Chatbot',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }
